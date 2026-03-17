@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=5.0">
+<title>Buscador Global - PayJoy</title>
+<link rel="icon" type="image/png" sizes="32x32" href="https://i.imgur.com/3jgLE8P.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* 🎨 VARIABLES DE COLOR INTERNAS */
+:root {
+  --bg-base: #dde4e0;          
+  --grid-line: rgba(140, 160, 140, 0.35); 
+  --accent: #A2C617;          
+  --accent-dark: #658006;      
+  --card-bg: #ffffff;          
+  --text-dark: #1e1e1e;        
+  --text-soft: #5c5c5c;        
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: var(--bg-base);
+  background-image: 
+    linear-gradient(0deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 60px 60px; 
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* ✨ EFECTO DE PESTAÑEO AL CAMBIAR PAÍS */
+.pestaneo { animation: flashEffect 0.6s ease-in-out; }
+@keyframes flashEffect {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+/* 🌍 ESTILOS LANDING PAÍSES */
+#pantallaPaises {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 100vh; text-align: center; padding: 20px; animation: fadeInBody 0.8s ease;
+}
+.titulo-global { font-size: 28px; font-weight: 800; color: #161616; margin-bottom: 30px; }
+.grid-paises {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px; max-width: 900px; width: 100%;
+}
+.pais-card {
+  background: white; padding: 25px; border-radius: 16px; cursor: pointer;
+  transition: 0.3s; border: 2px solid transparent; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.pais-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+
+/* IMAGEN DE BANDERA EN LANDING */
+.bandera-img { width: 60px; height: 40px; object-fit: contain; margin-bottom: 10px; border-radius: 4px; }
+.pais-nombre { font-weight: 700; font-size: 16px; color: var(--text-dark); }
+
+/* 🎨 MENÚ DESPLEGABLE MEJORADO EN HEADER */
+.custom-select-container {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid var(--accent);
+  border-radius: 30px;
+  padding: 4px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.3s;
+}
+.custom-select-container:hover { background: rgba(255, 255, 255, 0.2); box-shadow: 0 0 10px rgba(162, 198, 23, 0.3); }
+
+/* Bandera miniatura en el header */
+.header-bandera-min { width: 24px; height: 16px; border-radius: 2px; object-fit: cover; }
+
+#countrySelect {
+  background: transparent;
+  color: white;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.custom-select-container::after {
+  content: '▼'; font-size: 9px; color: white; margin-left: 5px; pointer-events: none; opacity: 0.8;
+}
+#countrySelect option { background: #2a2a2a; color: white; padding: 10px; }
+
+.hidden { display: none !important; }
+
+/* 🧠 HEADER INTERNO */
+header {
+  background: linear-gradient(to right, #161616, #5f5f5f);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+.header-left { display: flex; align-items: center; gap: 17px; cursor: pointer; }
+.header-left img { height: 38px; border-radius: 8px; background: #fff; padding: 6px; margin-left: 10px; }
+.header-left h1 { margin: 0; font-size: 21px; color: #fff; font-weight: 700; letter-spacing: 0.3px;}
+.header-right { display: flex; align-items: center; gap: 15px; }
+
+/* Campana */
+.campana-container {
+  position: relative; cursor: pointer; font-size: 24px; padding: 8px;
+  background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s;
+}
+.campana-container:hover { background: rgba(255,255,255,0.3); }
+.badge {
+  position: absolute; top: -2px; right: -2px; background: #D32F2F; color: white;
+  font-size: 12px; font-weight: bold; width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); font-family: "Inter", sans-serif;
+}
+
+/* Panel Notificaciones */
+.dropdown-notificaciones {
+  display: none; position: absolute; top: 50px; right: 0; background: white; width: 320px;
+  border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.25); z-index: 1000; overflow: hidden; text-align: left;
+}
+.dropdown-header { background: #f4f5f4; padding: 12px 15px; font-weight: bold; border-bottom: 1px solid #E0E6E2; color: var(--accent-dark); font-size: 15px; }
+.notif-item { padding: 12px 15px; border-bottom: 1px solid #E0E6E2; cursor: pointer; font-size: 14px; color: var(--text-dark); transition: 0.2s; display: flex; align-items: flex-start; gap: 10px;}
+.notif-item:hover { background: #f0f7f3; }
+.notif-item:last-child { border-bottom: none; }
+.notif-icono { font-size: 18px; margin-top: 2px; }
+
+/* Recuadro de Incidencias Principal */
+#cajaIncidencias { width: 100%; max-width: 1200px; margin: 15px auto 0 auto; border-radius: 10px; overflow: hidden; display: none; animation: slideDown 0.4s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.incidencia-alerta {
+  background: #FFEBEE; border-left: 6px solid #D32F2F; padding: 12px 18px; color: #B71C1C;
+  cursor: pointer; border-bottom: 1px solid #FFCDD2; transition: 0.2s; display: flex; flex-direction: column; gap: 4px;
+}
+.incidencia-alerta:hover { background: #FFCDD2; }
+.incidencia-titulo-row { display: flex; justify-content: space-between; align-items: flex-start; }
+.incidencia-titulo { font-weight: bold; font-size: 16px; }
+.incidencia-fecha-esquina { font-size: 11px; color: #D32F2F; opacity: 0.9; white-space: nowrap; margin-left: 10px; background: rgba(255,255,255,0.6); padding: 3px 6px; border-radius: 4px; font-weight: bold; }
+.incidencia-subtexto { font-size: 12px; opacity: 0.8; }
+
+/* 🔍 BÚSQUEDA MINIMALISTA (Header) */
+.search-wrapper { position: relative; display: flex; align-items: center; width: 320px; transition: all 0.4s ease; }
+.search-wrapper input { 
+  width: 100%; padding: 12px 45px 12px 18px; border-radius: 20px; border: 1px solid #BFC5C3; font-size: 16px; 
+  background: white; transition: all 0.3s ease; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); font-family: "Inter", sans-serif;
+}
+.search-wrapper input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 8px rgba(162, 198, 23, 0.4); }
+.btn-search-icon { 
+  position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: transparent; border: none; padding: 8px; cursor: pointer; 
+  color: var(--accent-dark); display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.2s; 
+}
+.btn-search-icon:hover { background: #F5FAF7; transform: translateY(-50%) scale(1.05); }
+.icon-lupa { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.spinner-mini { width: 20px; height: 20px; border: 3px solid rgba(101, 128, 6, 0.2); border-top-color: var(--accent-dark); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+/* Buscador Inicial (Centro de pantalla) */
+.searchbar { display: flex; gap: 10px; align-items: center; }
+.inicio { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 75vh; }
+.inicio input[type="search"] { padding: 14px 18px; border-radius: 12px; border: 1px solid #c9cfc7; width: 420px; background: #ffffffd0; color: var(--text-dark); font-size: 16px; outline: none; font-family: "Inter", sans-serif; }
+.inicio button.btn { position: relative; padding: 12px 18px; border-radius: 10px; border: none; background: var(--accent); color: #05210a; font-weight: 600; font-size: 16px; font-family: "Inter", sans-serif; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transition: .2s ease; display: flex; align-items: center; justify-content: center;}
+.inicio button.btn:hover { background: var(--accent-dark); color: #fff; transform: translateY(-2px); }
+.inicio p { margin-top: 15px; font-size: 15px; color: var(--text-soft); }
+
+button.btn .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255, 255, 255, 0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 6px; }
+button.btn.loading { pointer-events: none; opacity: 0.8; color: transparent;}
+button.btn.loading .spinner { display: inline-block; position: absolute; margin: 0; }
+button.btn.loading span { display: none; }
+
+/* BOTONES FLOTANTES */
+#btnGuias { position: fixed; right: 15px; bottom: 15px; background: #161616; color: white; padding: 12px 18px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 6px 12px rgba(0,0,0,0.25); transition: .3s; z-index: 999; display: flex; align-items: center; gap: 8px; font-family: "Inter", sans-serif;}
+#btnGuias:hover { background: var(--accent-dark); transform: translateY(-3px); }
+
+/* PANTALLA GUÍAS */
+#guiasContainer { display: none; width: 100%; max-width: 900px; margin: 20px auto; animation: slideDown 0.4s ease; padding-bottom: 60px; }
+.titulo-guias-pantalla { font-size: 26px; font-weight: 800; color: var(--accent-dark); margin-bottom: 20px; text-align: left; border-bottom: 3px solid var(--accent); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+.acordeon-item { background: white; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #E0E6E2; overflow: hidden; transition: 0.3s;}
+.acordeon-header { padding: 18px 20px; font-weight: bold; font-size: 17px; color: var(--text-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+.acordeon-header:hover { background: #F9FBF8; color: var(--accent-dark); }
+.acordeon-icon { transition: transform 0.3s; font-size: 14px; color: var(--accent-dark); }
+.acordeon-content { display: none; padding: 0 20px 20px 20px; border-top: 1px solid #f0f0f0; margin-top: 5px; padding-top: 15px; }
+.acordeon-item.activo { border-color: var(--accent); box-shadow: 0 6px 18px rgba(162, 198, 23, 0.25); }
+.acordeon-item.activo .acordeon-content { display: block; animation: fadeIn 0.4s ease; }
+.acordeon-item.activo .acordeon-icon { transform: rotate(180deg); }
+.acordeon-img { width: 85%; max-width: 550px; border-radius: 8px; margin: 15px auto 0 auto; display: block; border: 1px solid #eee; }
+.acordeon-text { font-size: 15px; color: var(--text-dark); line-height: 1.6; white-space: pre-wrap; background: #f7faf8; padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent); }
+
+/* GRID RESULTADOS MÚLTIPLES */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 18px; }
+.card { background: var(--card-bg); border-radius: 12px; padding: 8px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.1); cursor: pointer; transition: .18s ease; font-family: "Inter", sans-serif; }
+.card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+.card img { width: 100%; height: 160px; object-fit: contain; border-radius: 8px; background: #f8f9f8; padding: 4px; }
+.card .title { margin-top: 8px; font-weight: 700; color: var(--accent-dark); font-size: 15px; min-height: 42px; }
+
+/* DETALLE (ESTRUCTURA ORIGINAL AGENTES) */
+.detalle { display: none; margin-top: 22px; background: transparent; padding: 0 0 60px 0;}
+.detalle .layout { display: grid; grid-template-columns: 0.9fr 1.4fr; gap: 20px; }
+.detalle h2 { text-align: center; margin-bottom: 18px; font-size: 26px; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+.detalle .left-col { text-align: center; }
+.detalle .left-col img { width: 88%; max-width: 340px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.15); }
+.detalle .box { background: #f7faf8; border: 1px solid #dce3dc; border-radius: 12px; padding: 15px; margin-bottom: 16px; font-family: "Inter", sans-serif; }
+.detalle .box h3 { margin: 0 0 8px; font-weight: 800; font-size: 17px; color: var(--accent-dark); }
+.detalle .box p { margin: 0; font-size: 15px; line-height: 1.6; color: var(--text-dark); white-space: pre-wrap; }
+.bottom-split { display: grid; grid-template-columns: 70% 30%; gap: 14px; align-items: stretch; }
+.toggle-btn { background: none; border: none; color: inherit; cursor: pointer; width: 100%; text-align: left; padding: 0; font-family: "Inter", sans-serif; }
+.toggle-btn h3 { display: flex; justify-content: space-between; align-items: center; margin: 0; font-weight: 800; font-size: 17px; color: var(--accent-dark); }
+.contenido-desplegable { max-height: 0; overflow: hidden; opacity: 0; transition: all .3s ease; }
+.contenido-desplegable.activo { max-height: 400px; opacity: 1; margin-top: 10px; }
+
+/* MODALES */
+.modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+.modal-content { max-width: 90%; max-height: 90%; border-radius: 10px; }
+.modal-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 35px; cursor: pointer; font-weight: bold;}
+
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: flex-start; justify-content: center; padding-top: 10vh; z-index: 2000; backdrop-filter: blur(3px); }
+
+.modal-notif-content { background: white; width: 90%; max-width: 480px; border-radius: 16px; padding: 25px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: aparecerArriba 0.3s ease; max-height: 85vh; overflow-y: auto; }
+.modal-notif-content h2 { margin-top: 0; margin-bottom: 5px; font-size: 20px; color: var(--text-dark);}
+.modal-fecha { display: block; font-size: 13px; color: #6e8275; margin-bottom: 15px; border-bottom: 2px solid #E0E6E2; padding-bottom: 10px; }
+.modal-imagen { width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px; margin-bottom: 15px; background: #F9FBF8; }
+.modal-notif-content p { color: var(--text-dark); font-size: 15px; line-height: 1.6; text-align: left; background: #F9FBF8; padding: 15px; border-radius: 8px; border: 1px solid #E3E9E5; white-space: pre-wrap; margin-top: 0;}
+.modal-btn-cerrar { margin-top: 15px; width: 100%; padding: 12px; background: var(--accent-dark); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; font-family: "Inter", sans-serif;}
+.modal-btn-cerrar:hover { background: var(--accent); color: #05210a; }
+
+/* EXTRAS */
+.no-results { text-align: center; margin-top: 40px; animation: fadeIn .8s ease; display: none;}
+.no-results .emoji { font-size: 50px; display: inline-block; animation: spin 2s linear infinite; }
+.no-results p { margin-top: 10px; font-size: 16px; color: var(--text-soft); }
+footer { text-align: center; font-size: 13px; color: var(--text-soft); margin-top: 50px; padding-bottom: 30px;}
+
+@keyframes fadeInBody { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes aparecerArriba { 0% { opacity: 0; transform: translateY(-30px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* MÓVIL */
+@media (max-width: 768px) {
+  header { flex-direction: column; align-items: flex-start; position: relative;}
+  .header-left h1 { font-size: 19px; }
+  .header-right { width: 100%; margin-top: 15px; justify-content: space-between;}
+  .search-wrapper { width: 55%; }
+  .campana-container { position: absolute; right: 20px; top: 15px; }
+  .dropdown-notificaciones { width: 90vw; right: -10px; top: 45px;}
+  .detalle .layout { grid-template-columns: 1fr; }
+  .bottom-split { grid-template-columns: 1fr; }
+  .inicio input[type="search"] { width: 100%; }
+  .grid-paises { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body id="cuerpoPagina">
+
+<div id="pantallaPaises">
+  <img src="https://i.imgur.com/V0nN4Bo.png" style="height: 50px; margin-bottom: 10px;">
+  <div class="titulo-global">Troubleshooting | Clerk support</div>
+  <div class="grid-paises">
+    <div class="pais-card" onclick="seleccionarPais('peru', 'https://i.imgur.com/U5PXK5C.png')">
+      <img src="https://i.imgur.com/U5PXK5C.png" class="bandera-img"><span class="pais-nombre">Perú</span>
+    </div>
+    <div class="pais-card" onclick="seleccionarPais('mexico', 'https://i.imgur.com/ALEsQHQ.png')">
+      <img src="https://i.imgur.com/ALEsQHQ.png" class="bandera-img"><span class="pais-nombre">México</span>
+    </div>
+    <div class="pais-card" onclick="seleccionarPais('colombia', 'https://i.imgur.com/ynDAdsI.png')">
+      <img src="https://i.imgur.com/ynDAdsI.png" class="bandera-img"><span class="pais-nombre">Colombia</span>
+    </div>
+    <div class="pais-card" onclick="seleccionarPais('ecuador', 'https://i.imgur.com/2bl8BZx.png')">
+      <img src="https://i.imgur.com/2bl8BZx.png" class="bandera-img"><span class="pais-nombre">Ecuador</span>
+    </div>
+    <div class="pais-card" onclick="seleccionarPais('panama', 'https://i.imgur.com/zj1NlAv.png')">
+      <img src="https://i.imgur.com/zj1NlAv.png" class="bandera-img"><span class="pais-nombre">Panamá</span>
+    </div>
+    <div class="pais-card" onclick="seleccionarPais('south_africa', 'https://i.imgur.com/vXr9CT8.png')">
+      <img src="https://i.imgur.com/vXr9CT8.png" class="bandera-img"><span class="pais-nombre">South Africa</span>
+    </div>
+    <div class="pais-card" onclick="seleccionarPais('brazil', 'https://i.imgur.com/lQrOdxL.png')">
+      <img src="https://i.imgur.com/lQrOdxL.png" class="bandera-img"><span class="pais-nombre">Brazil</span>
+    </div>
+    <div class="pais-card" onclick="seleccionarPais('philippines', 'https://i.imgur.com/AzUnDa4.png')">
+      <img src="https://i.imgur.com/AzUnDa4.png" class="bandera-img"><span class="pais-nombre">Philippines</span>
+    </div>
+    <div class="pais-card" onclick="seleccionarPais('indonesia', 'https://i.imgur.com/q6BGYA8.png')">
+      <img src="https://i.imgur.com/q6BGYA8.png" class="bandera-img"><span class="pais-nombre">Indonesia</span>
+    </div>
+  </div>
+</div>
+
+<div id="interfazPrincipal" class="hidden">
+    <button id="btnGuias" onclick="abrirGuias()">📖 Guías Internas</button>
+
+    <header>
+      <div class="header-left" onclick="volverInicio()">
+        <img src="https://i.imgur.com/V0nN4Bo.png" alt="logo">
+        <h1>Buscador Troubleshooting</h1>
+      </div>
+      
+      <div class="header-right">
+        <div class="custom-select-container">
+          <img id="headerFlag" src="" class="header-bandera-min">
+          <select id="countrySelect" onchange="cambiarPaisDirecto(this.value)">
+            <option value="peru">Perú</option>
+            <option value="mexico">México</option>
+            <option value="colombia">Colombia</option>
+            <option value="ecuador">Ecuador</option>
+            <option value="panama">Panamá</option>
+            <option value="south_africa">South Africa</option>
+            <option value="brazil">Brazil</option>
+            <option value="philippines">Philippines</option>
+            <option value="indonesia">Indonesia</option>
+          </select>
+        </div>
+
+        <div class="search-wrapper" id="searchBarHeader" style="display: none;">
+          <input type="text" id="q" placeholder="Escribe palabra o código..." onkeydown="if(event.key==='Enter'){buscar();}">
+          <button class="btn-search-icon" id="btnSearchTop" onclick="buscar()">
+            <svg class="icon-lupa" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <div class="spinner-mini" style="display: none;"></div>
+          </button>
+        </div>
+
+        <div class="campana-container" onclick="toggleNotificaciones(event)">
+          🔔
+          <div id="badgeNotif" class="badge" style="display: none;">0</div>
+          <div id="dropdownNotif" class="dropdown-notificaciones" onclick="event.stopPropagation()">
+            <div class="dropdown-header">Avisos Internos</div>
+            <div id="listaDropdown"><div style="padding:15px; text-align:center; color:#777;">Cargando...</div></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div id="cajaIncidencias"></div>
+
+      <div id="inicio" class="inicio">
+        <div class="searchbar">
+          <input id="qInicio" type="search" placeholder="Escribe palabra o código..." onkeydown="if(event.key==='Enter'){buscarInicio();}">
+          <button class="btn" onclick="buscarInicio()">
+            <div class="spinner"></div><span>Buscar</span>
+          </button>
+        </div>
+        <p>Busca la palabra o el código de error. Encuentra la causa y su posible solución. 💡</p>
+        <footer>© 2026 PayJoy | Clerk Global Support</footer>
+      </div>
+
+      <main style="display:none;" id="mainContent">
+        <div id="grid" class="grid"></div>
+        <div id="noResults" class="no-results">
+          <div class="emoji">🔍</div>
+          <p>No se encontraron resultados.<br>Intenta con otra palabra o revisa el código.</p>
+        </div>
+
+        <div id="detalle" class="detalle">
+          <div class="layout">
+            <div class="left-col">
+              <h2 id="detalleTitulo"></h2>
+              <img id="detalleImg" src="" alt="imagen principal">
+            </div>
+            <div class="right-col">
+              <div class="box"><h3>¿Por qué pasa?</h3><p id="detalleF"></p></div>
+              <div class="box"><h3>Acción Sugerida</h3><p id="detalleG"></p></div>
+              <div class="bottom-split">
+                <div class="box box-desplegable">
+                  <button class="toggle-btn" onclick="toggleRequisitos()">
+                    <h3>Requisitos Escalación ⯆</h3>
+                  </button>
+                  <div id="detalleHContainer" class="contenido-desplegable">
+                    <p id="detalleH"></p>
+                  </div>
+                </div>
+                <div class="box">
+                  <button class="toggle-btn" onclick="abrirModal()">
+                    <h3>Infografía ⯈</h3>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      <div id="guiasContainer">
+        <div class="titulo-guias-pantalla">📚 Guías y Procesos Internos</div>
+        <div id="listaGuiasContenedor">
+          <div style="text-align:center; padding: 20px; color: #777;">Cargando guías...⏳</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="modalImg" class="modal">
+  <span class="modal-close" onclick="cerrarModal()">&times;</span>
+  <img id="detalleExtra" class="modal-content" src="" alt="infografía de apoyo">
+</div>
+
+<div id="modalNotif" class="modal-overlay" onclick="cerrarModalNotif(event)">
+  <div class="modal-notif-content" onclick="event.stopPropagation()">
+    <h2 id="modalTitulo">Título</h2>
+    <span id="modalFecha" class="modal-fecha"></span>
+    <img id="modalImagen" class="modal-imagen" src="" alt="Aviso PayJoy" style="display: none;">
+    <p id="modalDetalle">Detalle completo.</p>
+    <button class="modal-btn-cerrar" onclick="cerrarModalNotif(event)">Entendido</button>
+  </div>
+</div>
+
+<script>
+// --- MAPEO DE BANDERAS (image_973564.png) ---
+const BANDERAS = {
+  "peru": "https://i.imgur.com/U5PXK5C.png",
+  "mexico": "https://i.imgur.com/ALEsQHQ.png",
+  "colombia": "https://i.imgur.com/ynDAdsI.png",
+  "ecuador": "https://i.imgur.com/2bl8BZx.png",
+  "panama": "https://i.imgur.com/zj1NlAv.png",
+  "south_africa": "https://i.imgur.com/vXr9CT8.png",
+  "brazil": "https://i.imgur.com/lQrOdxL.png",
+  "philippines": "https://i.imgur.com/AzUnDa4.png",
+  "indonesia": "https://i.imgur.com/q6BGYA8.png"
+};
+
+const webAppUrl = "https://script.google.com/macros/s/AKfycbyFaNiim71TAlI8sqeo99TaSxPztusedozlM2ld6ppI6oXfxMEfybc2khr3QZFpvWJ3/exec"; 
+
+let paisSeleccionado = "peru";
+
+const qInput = document.getElementById('q');
+const qInicio = document.getElementById('qInicio');
+const grid = document.getElementById('grid');
+const detalle = document.getElementById('detalle');
+const modal = document.getElementById('modalImg');
+const extra = document.getElementById('detalleExtra');
+const noResults = document.getElementById('noResults');
+
+// ==========================================
+// LÓGICA DE PAÍSES
+// ==========================================
+function seleccionarPais(id, imgUrl) {
+  paisSeleccionado = id;
+  document.getElementById("countrySelect").value = id;
+  document.getElementById("headerFlag").src = imgUrl;
+  
+  document.getElementById("pantallaPaises").classList.add("hidden");
+  document.getElementById("interfazPrincipal").classList.remove("hidden");
+  
+  volverInicio(true);
+  cargarNotificaciones();
+  cargarGuias();
+}
+
+function cambiarPaisDirecto(id) {
+  // ✨ EFECTO DE PESTAÑEO AL CAMBIAR (Sin confirmación)
+  const cuerpo = document.getElementById("cuerpoPagina");
+  cuerpo.classList.remove("pestaneo");
+  void cuerpo.offsetWidth; // Truco para reiniciar la animación CSS
+  cuerpo.classList.add("pestaneo");
+
+  paisSeleccionado = id;
+  document.getElementById("headerFlag").src = BANDERAS[id];
+  
+  // Limpiar resultados y volver a vista inicial del país seleccionado
+  volverInicio(true);
+  cargarNotificaciones();
+  cargarGuias();
+}
+
+// ==========================================
+// NAVEGACIÓN Y CEREBRO
+// ==========================================
+window.onload = function() {
+  history.replaceState({ vista: 'paises' }, "");
+};
+
+window.addEventListener("popstate", function(event) {
+  if (event.state && event.state.vista) {
+    const vista = event.state.vista;
+    if (vista === 'lista_resultados' || vista === 'detalle_resultado') {
+        if(event.state.data) { handleResults(event.state.data, true); }
+    } else if (vista === 'inicio') {
+        volverInicio(true);
+    } else if (vista === 'guias') {
+        abrirGuias(true);
+    }
+  }
+});
+
+function volverInicio(desdeHistorial) {
+  document.getElementById("inicio").style.display = "flex";
+  document.getElementById("mainContent").style.display = "none";
+  document.getElementById("searchBarHeader").style.display = "none";
+  document.getElementById("guiasContainer").style.display = "none";
+  document.getElementById("cajaIncidencias").style.display = "none";
+  
+  qInput.value = ""; qInicio.value = "";
+  grid.innerHTML = ""; detalle.style.display = "none"; noResults.style.display = "none";
+  document.getElementById("btnGuias").style.display = "flex";
+  
+  renderizarNotificaciones();
+  if (desdeHistorial !== true) history.pushState({ vista: 'inicio' }, "");
+}
+
+function abrirGuias(desdeHistorial) {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("searchBarHeader").style.display = "flex"; 
+  document.getElementById("mainContent").style.display = "none";
+  document.getElementById("cajaIncidencias").style.display = "none"; 
+  
+  document.getElementById("guiasContainer").style.display = "block";
+  document.getElementById("btnGuias").style.display = "none"; 
+
+  if (desdeHistorial !== true) history.pushState({ vista: 'guias' }, "");
+}
+
+// ==========================================
+// LÓGICA DE BÚSQUEDA Y SPINNERS
+// ==========================================
+function activarLoader(origen = "header") { 
+  if (origen === "inicio") {
+    const btnInicio = document.querySelector("#inicio .btn");
+    if(btnInicio) btnInicio.classList.add("loading");
+  } else {
+    const botonTop = document.getElementById('btnSearchTop');
+    if(botonTop) {
+      botonTop.querySelector('.icon-lupa').style.display = 'none';
+      botonTop.querySelector('.spinner-mini').style.display = 'block';
+      botonTop.disabled = true;
+    }
+  }
+}
+
+function desactivarLoader(origen = "header") { 
+  if (origen === "inicio") {
+    const btnInicio = document.querySelector("#inicio .btn");
+    if(btnInicio) btnInicio.classList.remove("loading");
+  } else {
+    const botonTop = document.getElementById('btnSearchTop');
+    if(botonTop) {
+      botonTop.querySelector('.icon-lupa').style.display = 'block';
+      botonTop.querySelector('.spinner-mini').style.display = 'none';
+      botonTop.disabled = false;
+    }
+  }
+}
+
+function buscarInicio() {
+  const palabra = qInicio.value.trim();
+  if (!palabra) return alert("⚠️ Ingresa una palabra o código.");
+  qInput.value = palabra;
+  activarLoader("inicio");
+  ejecutarFetch(palabra, "inicio");
+}
+
+function buscar() {
+  const palabra = qInput.value.trim();
+  if (!palabra) return alert("⚠️ Ingresa una palabra o código.");
+  qInicio.value = palabra;
+  activarLoader("header");
+  ejecutarFetch(palabra, "header");
+}
+
+function ejecutarFetch(palabra, origen) {
+  const dispositivo = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Móvil Agente" : "PC Agente";
+  
+  document.getElementById("cajaIncidencias").style.display = "none";
+  document.getElementById("guiasContainer").style.display = "none";
+  document.getElementById("btnGuias").style.display = "flex";
+
+  fetch(`${webAppUrl}?palabra=${encodeURIComponent(palabra)}&device=${encodeURIComponent(dispositivo)}&pais=${paisSeleccionado}`)
+    .then(r => r.json())
+    .then(res => { 
+        if(res.error) {
+            alert(res.msg);
+            desactivarLoader(origen);
+            return;
+        }
+        desactivarLoader(origen); 
+        document.getElementById("inicio").style.display = "none";
+        document.getElementById("mainContent").style.display = "block";
+        document.getElementById("searchBarHeader").style.display = "flex";
+        handleResults(res); 
+    })
+    .catch(e => { console.error(e); desactivarLoader(origen); alert("Error de conexión"); });
+}
+
+function handleResults(res, desdeHistorial) {
+  grid.innerHTML = ""; detalle.style.display = "none"; noResults.style.display = "none";
+  
+  if (!res || res.length === 0) { noResults.style.display = "block"; return; }
+  
+  if (res.length > 1) {
+    if (desdeHistorial !== true) history.pushState({ vista: 'lista_resultados', data: res }, "");
+    
+    res.forEach(item => {
+      const card = document.createElement('div'); card.className = 'card';
+      const img = document.createElement('img'); img.src = item.img || "https://via.placeholder.com/320x180";
+      const title = document.createElement('div'); title.className = 'title'; title.textContent = item.titulo || "(sin título)";
+      card.append(img, title);
+      card.onclick = () => {
+        const dispositivo = /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "Móvil Agente" : "PC Agente";
+        fetch(`${webAppUrl}?seleccion=${encodeURIComponent(item.titulo)}&palabra=${encodeURIComponent(qInput.value)}&device=${encodeURIComponent(dispositivo)}&pais=${paisSeleccionado}`);
+        handleResults([item]);
+      };
+      grid.appendChild(card);
+    });
+    return;
+  }
+  
+  if (desdeHistorial !== true) history.pushState({ vista: 'detalle_resultado', data: res }, "");
+  showDetail(res[0]);
+}
+
+function showDetail(item) {
+  grid.innerHTML = ""; noResults.style.display = "none";
+  document.getElementById('detalleTitulo').textContent = item.titulo || "";
+  document.getElementById('detalleImg').src = item.img || "https://via.placeholder.com/400x300";
+  document.getElementById('detalleF').innerHTML = (item.f || "").replace(/\n/g, "<br>");
+  document.getElementById('detalleG').innerHTML = (item.g || "").replace(/\n/g, "<br>");
+  document.getElementById('detalleH').innerHTML = (item.h || "").replace(/\n/g, "<br>");
+  modal.dataset.imgextra = item.imgExtra || "";
+  
+  const cont = document.getElementById("detalleHContainer");
+  cont.classList.remove("activo");
+  cont.previousElementSibling.querySelector("h3").innerHTML = "Requisitos Escalación ⯆";
+  
+  detalle.style.display = "block";
+  if (!window.history.state || window.history.state.vista !== 'detalle_resultado') {
+    detalle.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+// ==========================================
+// MODALES E INTERFAZ
+// ==========================================
+function toggleRequisitos() {
+  const cont = document.getElementById("detalleHContainer");
+  cont.classList.toggle("activo");
+  const h3 = cont.previousElementSibling.querySelector("h3");
+  h3.innerHTML = cont.classList.contains("activo") ? "Requisitos Escalación ⯅" : "Requisitos Escalación ⯆";
+}
+
+function abrirModal() {
+  const link = modal.dataset.imgextra;
+  extra.src = link && link.trim() !== "" ? link : "https://via.placeholder.com/600x800?text=Sin+infografía";
+  modal.style.display = "flex";
+}
+function cerrarModal() { modal.style.display = "none"; }
+
+// ==========================================
+// GUÍAS FRECUENTES
+// ==========================================
+let listaGuias = [];
+function cargarGuias() {
+  fetch(`${webAppUrl}?action=guias&pais=${paisSeleccionado}`).then(res => res.json()).then(data => { 
+    if(!data.error) {
+      listaGuias = data; 
+      renderizarGuias(); 
+    } else {
+      document.getElementById("listaGuiasContenedor").innerHTML = `<div style="text-align:center; padding: 20px; color: #777;">Base de guías para ${paisSeleccionado} en construcción. 🏗️</div>`;
+    }
+  }).catch(e => console.log(e));
+}
+function renderizarGuias() {
+  const contenedor = document.getElementById("listaGuiasContenedor");
+  if (!listaGuias || listaGuias.length === 0) {
+      contenedor.innerHTML = "<div style='text-align:center; padding: 20px; color: #777;'>No hay guías disponibles.</div>";
+      return;
+  }
+  let html = "";
+  listaGuias.forEach((guia, index) => {
+    const imgHtml = guia.imagen ? `<img src="${guia.imagen}" class="acordeon-img" alt="Infografía">` : '';
+    const descHtml = guia.descripcion ? `<div class="acordeon-text">${guia.descripcion}</div>` : '';
+    html += `<div class="acordeon-item" id="guia-${index}"><div class="acordeon-header" onclick="toggleAcordeon(${index})"><span>${guia.titulo}</span><span class="acordeon-icon">▼</span></div><div class="acordeon-content">${descHtml}${imgHtml}</div></div>`;
+  });
+  contenedor.innerHTML = html;
+}
+function toggleAcordeon(index) {
+  const item = document.getElementById(`guia-${index}`);
+  const estaActivo = item.classList.contains('activo');
+  document.querySelectorAll('.acordeon-item').forEach(el => el.classList.remove('activo'));
+  if (!estaActivo) { item.classList.add('activo'); setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300); }
+}
+
+// ==========================================
+// NOTIFICACIONES Y FORMATEO DE FECHA
+// ==========================================
+let listaNotificaciones = [];
+
+// Función para formatear fecha a DD/MM/YYYY
+function formatearFechaSheet(strFecha) {
+  if (!strFecha) return "";
+  try {
+    const d = new Date(strFecha);
+    if (isNaN(d.getTime())) return strFecha; // Si no es fecha válida, devuelve el texto original
+    const dia = d.getDate();
+    const mes = d.getMonth() + 1;
+    const anio = d.getFullYear();
+    return `${dia}/${mes}/${anio}`;
+  } catch(e) {
+    return strFecha;
+  }
+}
+
+function cargarNotificaciones() {
+  fetch(`${webAppUrl}?action=notificaciones&pais=${paisSeleccionado}`).then(res => res.json()).then(data => { 
+    if(!data.error) {
+      listaNotificaciones = data; 
+      renderizarNotificaciones(); 
+    }
+  }).catch(e => console.log(e));
+}
+
+function renderizarNotificaciones() {
+  const badge = document.getElementById("badgeNotif");
+  const dropdown = document.getElementById("listaDropdown");
+  const cajaIncidencias = document.getElementById("cajaIncidencias");
+  dropdown.innerHTML = ""; let htmlIncidencias = "";
+  
+  if (!listaNotificaciones || listaNotificaciones.length === 0) {
+    badge.style.display = "none"; dropdown.innerHTML = "<div style='padding:15px; text-align:center;'>No hay avisos.</div>"; cajaIncidencias.style.display = "none"; return;
+  }
+
+  badge.style.display = "flex"; badge.innerText = listaNotificaciones.length;
+  listaNotificaciones.forEach((notif, index) => {
+    const esIncidencia = notif.tipo === "incidencia"; 
+    const icono = esIncidencia ? "🔴" : "💡";
+    const fechaLimpia = formatearFechaSheet(notif.fecha);
+    const strFecha = fechaLimpia ? `<span style="font-size:12px; color:#7A8F6A;">${fechaLimpia}</span>` : '';
+    
+    const divItem = document.createElement("div"); divItem.className = "notif-item";
+    divItem.innerHTML = `<span class="notif-icono">${icono}</span> <div style="display:flex; flex-direction:column;"><span><b>${notif.titulo}</b></span> ${strFecha}</div>`;
+    divItem.onclick = () => abrirModalNotif(index); dropdown.appendChild(divItem);
+    
+     if (esIncidencia) {
+      const fechaEsquina = fechaLimpia ? `<span class="incidencia-fecha-esquina">📅 ${fechaLimpia}</span>` : '';
+      htmlIncidencias += `
+        <div class="incidencia-alerta" onclick="abrirModalNotif(${index})">
+          <div class="incidencia-titulo-row"><span class="incidencia-titulo">⚠️ ${notif.titulo}</span>${fechaEsquina}</div>
+          <span class="incidencia-subtexto">Click para ver detalle</span>
+        </div>`;
+    }
+  });
+
+  if (htmlIncidencias !== "") { cajaIncidencias.innerHTML = htmlIncidencias; if (document.getElementById("inicio").style.display !== "none") cajaIncidencias.style.display = "block"; } 
+  else { cajaIncidencias.style.display = "none"; }
+}
+
+function toggleNotificaciones(e) { e.stopPropagation(); const drop = document.getElementById("dropdownNotif"); drop.style.display = drop.style.display === "block" ? "none" : "block"; }
+
+function abrirModalNotif(index) {
+  const notif = listaNotificaciones[index];
+  document.getElementById("modalTitulo").innerHTML = (notif.tipo === "incidencia" ? "🚨 " : "✨ ") + notif.titulo;
+  const contFecha = document.getElementById("modalFecha");
+  const fechaLimpia = formatearFechaSheet(notif.fecha);
+  
+  if (fechaLimpia) { contFecha.innerHTML = `📅 ${fechaLimpia}`; contFecha.style.display = "block"; } else { contFecha.style.display = "none"; }
+  
+  const imgEl = document.getElementById("modalImagen");
+  if (notif.imagen) { imgEl.src = notif.imagen; imgEl.style.display = "block"; } else { imgEl.style.display = "none"; imgEl.src = ""; }
+  document.getElementById("modalDetalle").innerText = notif.detalle;
+  document.getElementById("modalNotif").style.display = "flex"; document.getElementById("dropdownNotif").style.display = "none";
+}
+
+function cerrarModalNotif(e) { if(e) e.stopPropagation(); document.getElementById("modalNotif").style.display = "none"; }
+
+window.addEventListener("click", function(event) {
+  const drop = document.getElementById("dropdownNotif");
+  if (drop && drop.style.display === "block" && !event.target.closest('.campana-container')) drop.style.display = "none";
+});
+</script>
+</body>
+</html>
