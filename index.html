@@ -193,7 +193,7 @@ button.btn.loading span { display: none; }
   animation: spin 0.8s linear infinite;
 }
 
-/* 🐒 ESTILOS PARA CLERKIE EL MONO (AGRANDADO A 85px) */
+/* 🐒 ESTILOS PARA CLERKIE LA MASCOTA (AGRANDADO A 90px) */
 #clerkieMascota {
   position: fixed;
   right: 15px;
@@ -337,8 +337,7 @@ footer { text-align: center; font-size: 13px; color: var(--text-soft); margin-to
     <button id="btnIndice" onclick="verIndice()">🗂️ Índice</button>
     <button id="btnGuias" onclick="abrirGuias()">📖 Guías Internas</button>
 
-    <!-- 🐒 CLERKIE EL MONO (AGRANDADO) -->
-    <img id="clerkieMascota" src="https://i.imgur.com/RNKDbV1.png" onclick="pedirSuerteClerkie()" alt="Clerkie">
+    <img id="clerkieMascota" src="https://i.imgur.com/VBgQ3Oz.png" onclick="pedirSuerteClerkie()" alt="Clerkie">
 
     <header>
       <div class="header-left" onclick="volverInicio()">
@@ -456,7 +455,7 @@ footer { text-align: center; font-size: 13px; color: var(--text-soft); margin-to
 </div>
 
 <script>
-// --- MAPEO DE BANDERAS ---
+// --- VARIABLES GLOBALES ---
 const BANDERAS = {
   "peru": "https://i.imgur.com/U5PXK5C.png",
   "mexico": "https://i.imgur.com/ALEsQHQ.png",
@@ -469,8 +468,7 @@ const BANDERAS = {
   "indonesia": "https://i.imgur.com/q6BGYA8.png"
 };
 
-const webAppUrl = "https://script.google.com/macros/s/AKfycbx6uvHVb9uD0MUT4CvgbE1KljOqAlBhKW3qbsHU02m451VbNxZ2evLJ_8EYAz-FAdkR/exec"; 
-
+const webAppUrl = "https://script.google.com/macros/s/AKfycbwZRzZ_m3eBTNtVQllUMPI4LPF8cOa67HkBJKcethhBP20LS1Qmcsk-xedGNUg5z8sN/exec"; 
 let paisSeleccionado = "peru";
 
 const qInput = document.getElementById('q');
@@ -483,29 +481,134 @@ const noResults = document.getElementById('noResults');
 
 // --- IMÁGENES DE CLERKIE ---
 const CLERKIE_IMG = {
-  reposo: "https://i.imgur.com/RNKDbV1.png",
-  pensativo: "https://i.imgur.com/K7MplzW.png",
-  celebrando: "https://i.imgur.com/9O3RUyX.png",
-  espera: "https://i.imgur.com/cGvJKQ2.png"
+  reposo: "https://i.imgur.com/VBgQ3Oz.png",
+  pensativo: "https://i.imgur.com/7sOdIt3.png",
+  celebrando: "https://i.imgur.com/qouVoWE.png",
+  espera: "https://i.imgur.com/jvXJwRO.png"
 };
 
 // ==========================================
-// 🐒 LÓGICA DE CLERKIE EL MONO ORÁCULO
+// LÓGICA DE CLERKIE LA MASCOTA
 // ==========================================
 function pedirSuerteClerkie() {
+  // 👇 aqui ponemos el sonido 👇
+  const sonidoPop = new Audio("https://res.cloudinary.com/ddkimbjgk/video/upload/v1775862066/floraphonic-multi-pop-1-188165_fauaoe.mp3");
+  sonidoPop.play();
+  // 👆 ------------------------------- 👆
   const clerkiEl = document.getElementById("clerkieMascota");
   clerkiEl.src = CLERKIE_IMG.celebrando;
   
   const frases = [
-    "Clerkie dice: ¡El próximo cliente será muy amable! 😊",
-    "Clerkie dice: ¡Veo una resolución exitosa en tu futuro! ⭐",
-    "Clerkie dice: ¡Hoy es un buen día para cerrar tickets difíciles! 💪",
-    "Clerkie dice: ¡Tu café hoy tendrá el poder de 3 cafés! ☕",
-    "Clerkie dice: ¡Cuidado! Se viene una escalación interesante. 🕵️‍♂️",
-    "Clerkie dice: ¡El sistema estará de tu lado hoy! ⚡",
-    "Clerkie dice: ¡Te mereces un sorbo de agua ahora mismo! 💧",
-    "Clerkie dice: ¡No olvides estirar un poco la espalda! 🐒",
-    "Clerkie dice: ¡Ese código de error no tiene oportunidad contra ti! 🔥"
+    "POV: El sistema funciona lento, pero tú vas a 300 por hora. ✨",
+    "Ese cierre de caso fue tan limpio que merece un tutorial. ✅",
+    "Tu gestión de hoy es 10/10. Datos, no opiniones. 📉",
+    "Dile a ese error que su comportamiento es una bandera roja gigante. 🚩",
+    "Modo experto activado. Ninguna caída de red te detiene hoy. 🦾",
+    "Tu teclado suena a pura productividad. Energía de protagonista. 🌟",
+    "Menos errores, más soluciones. Ese es el plan de hoy. 🌈",
+    "Ese cierre de caso fue impecable. Mis respetos. 🙌",
+    "Manifestando que el próximo caso se resuelva en un solo clic. 🕯️",
+    "Tu paciencia con este proceso es nivel leyenda. 🫡",
+    "Eres el dueño de las resoluciones rápidas en este turno. 🥇",
+    "Si el sistema no carga, es que no procesa tanto talento junto. 💅",
+    "Hoy tu internet tiene la estabilidad de un servidor de la NASA. 📶",
+    "Un descanso de 5 minutos y vuelves con el procesador reiniciado. 🔋",
+    "Hoy todo sale verde a la primera. Confía en el proceso. 🟢",
+    "Eres literalmente el soporte de toda esta operación. 🏛️",
+    "Resolviste lo que tres manuales no pudieron. Basado. 😎",
+    "No eres un bot, eres un artista de la gestión técnica. 🎨",
+    "Ese código de error ya es historia. Siguiente. ⏭️",
+    "Nivel de estrés: Bajo. Nivel de eficiencia: Fuera de serie. ♾️",
+    "¿Ese ruido es un constructor o es tu paciencia al límite? 🔨",
+    "Tu silla y tú ya son un solo equipo dinámico. 🪑",
+    "Si el Wi-Fi hoy decidió colaborar, no desperdicies el momento. 🌐",
+    "Un café ahora mismo es una inversión, no un gasto. ☕",
+    "Tu estación de trabajo es tu centro de mando. Haz que brille. ✨",
+    "El café frío es el símbolo oficial de una tarde productiva. ☕🧊",
+    "Tu mouse hoy tiene puntería de jugador profesional. 🖱️🎯",
+    "Estoy procesando tu lógica... Por favor, espera un segundo. ⏳",
+    "¿Ya probaste reiniciar? El truco más viejo y confiable del mundo. 🔄",
+    "Tu internet hoy no tiene lag, tiene respeto por tu tiempo. 📶",
+    "Baja los hombros. Los tenías pegados a las orejas. 🧘‍♂️",
+    "Toma agua. Tu cerebro no funciona con aire. 💧",
+    "Mira a un punto lejano por 20 segundos. Tus ojos te lo piden. 🌿",
+    "Estira la espalda. Tu 'yo' del futuro te lo agradecerá. 🦒",
+    "Respira profundo. Inhala calma, exhala el error del sistema. 🌬️",
+    "Haz un estiramiento rápido. No eres parte de la silla. 🤸‍♂️",
+    "Regálate un minuto de silencio. El ruido del chat puede esperar. 🤫",
+    "Ordena tu escritorio. Un espacio limpio es una mente clara. 🧹",
+    "Bloquea las distracciones. El enfoque es tu mejor herramienta. 🎯",
+    "¿Ya parpadeaste? No eres un monitor, descansa la vista. 👀",
+    "Elemental: la solución siempre estuvo en los registros. 🔎",
+    "Sigue el rastro del código y encontrarás la falla real. 🐾",
+    "Ningún error es tan complejo si lo analizas por partes. 🧐",
+    "Caso cerrado. Tu capacidad de deducción hoy está afilada. 💼",
+    "La pista clave estaba en lo que el clerk no mencionó. 🕵️",
+    "Analizando pruebas... El error no tiene dónde esconderse ahora. 🧐",
+    "Tu mirada hoy detecta hasta el fallo más pequeño. 🔍",
+    "No es suerte, es pura capacidad de análisis técnico. 🧠",
+    "Buscando el fallo en la cadena de mandos. Casi lo tienes. ⛓️",
+    "Tu instinto de soporte te llevará a la respuesta correcta. 🕵️‍♂️",
+    "Un caso menos es una victoria ganada. Seguimos. 🏁",
+    "Tu productividad hoy está rompiendo todos los récords. 📈",
+    "Eres el filtro que detiene el caos y lo vuelve solución. ☕",
+    "Que tu internet sea rápido y tus llamadas sean breves. 📶",
+    "Tu decisión hoy es más fuerte que cualquier caída de sistema. 🦾",
+    "Eres el equilibrio necesario entre la técnica y la paciencia. ☯️",
+    "Siente la satisfacción de cada proceso terminado con éxito. ✅",
+    "Hoy tu trabajo está marcando la diferencia en el equipo. 🎖️",
+    "Tu escritorio es tu puesto de mando. Pilotea con éxito. 👩‍🚀",
+    "Batería de enfoque cargada al 100%. A por el siguiente. 🔋",
+    "Hacia la resolución y más allá. 🚀",
+    "Que la lógica te acompañe en este caso difícil. 🌌",
+    "Tu velocidad de respuesta hoy es de otro nivel. 💥",
+    "Un gran poder conlleva tener cincuenta pestañas abiertas. 🕷️",
+    "Eres el Neo de esta matriz de casos técnicos. 🕶️",
+    "¿Misión Imposible? No para alguien con tu experiencia. 🕵️‍♂️",
+    "Incluso los errores del sistema te tienen respeto hoy. ✍️",
+    "Cargando solución... [████████▒▒] 80%",
+    "Solución enviada. Caso cerrado con éxito. ✨",
+    "Eres el escudo que protege al sistema del desorden. 🛡️",
+    "Si no lo encuentras, respira y cambia las palabras clave. 🔍",
+    "Tu mouse hoy tiene precisión quirúrgica. 🖱️🎯",
+    "No busques culpables, busca soluciones que cierren el ticket. 🌟",
+    "Tu paciencia es finita, adminístrala bien en este caso. 🔢",
+    "Hoy tus soluciones le están ahorrando tiempo a todos. 🗺️",
+    "Eres el guía para los compañeros que están empezando. 🏮",
+    "No hay problema pequeño si el análisis es el correcto. 🐜",
+    "Tu energía hoy es lo que mueve este canal de soporte. 📱",
+    "Hoy tus respuestas son más claras que el manual de usuario. 💧",
+    "Eres el dueño de tu ritmo de trabajo. Mantén el enfoque. ⏳",
+    "Mañana agradecerás haber dejado todo listo hoy. 🌅",
+    "Tu turno hoy fluye con una eficiencia envidiable. 🎧",
+    "Eres el motor de esta pantalla. Dale con todo. ❤️",
+    "Casi terminas. Un último esfuerzo y a desconectarse. 🏁",
+    "Tu capacidad de análisis hoy es de nivel experto. 🕵️",
+    "Hoy es un día productivo. Los resultados hablan por ti. 🌈",
+    "No te enfoques en el problema de ayer, soluciona el de hoy. 🥇",
+    "Ese sonido de ticket cerrado es la mejor música ambiental. 🎵",
+    "Tu voz en la gestión transmite seguridad y confianza. 🎙️",
+    "Hoy tienes el toque de precisión en cada tecla. 👑",
+    "Tu determinación hoy vence cualquier inconveniente técnico. 🦾",
+    "Eficiencia y claridad: tus dos mejores armas hoy. ☯️",
+    "La victoria está en los detalles bien revisados. ✅",
+    "Tu productividad hoy está en su punto máximo. 🌡️",
+    "Pilotea tu estación de trabajo con seguridad. 👩‍🚀",
+    "Hoy tus soluciones están volando alto. 🕊️",
+    "Eres el buscador de soluciones más efectivo del equipo. 🧠🔍",
+    "Tu calma bajo presión es tu mayor ventaja competitiva. 🏆",
+    "Hoy eres el pilar técnico de toda la oficina. 🦸",
+    "Lo confirmo: Tu gestión de hoy es impecable. 🐒💯",
+    "Reto: Toma un vaso de agua antes del próximo caso. 💧",
+    "Reto: Respira profundo 3 veces ahora mismo. ¡Suelta el aire! 🌬️",
+    "Reto: Estira los brazos hasta tocar el techo. ¡Como un mono! 🐒",
+    "Reto: Di 'hola' mentalmente a tu compañero favorito. 👋",
+    "Reto: Mantén la espalda recta por los próximos 5 minutos. 🪑",
+    "Reto: Mira un punto lejano por 10 segundos para descansar la vista. 👀",
+    "Reto: ¡Felicítate en voz baja! Ya casi termina el turno. 🏅",
+    "Reto: Sonríe un segundo. Sí, así, ¡te ves genial! 😄",
+    "Reto: Adivina de qué color será el fondo del próximo caso. 🎨",
+    "Reto: Mueve los tobillos en círculos. ¡Tus pies también trabajan! 🦶"
   ];
   
   const randomFrase = frases[Math.floor(Math.random() * frases.length)];
@@ -518,7 +621,7 @@ function pedirSuerteClerkie() {
 
   const toast = document.createElement('div');
   toast.innerText = randomFrase;
-toast.style = "position:fixed; bottom:180px; right:20px; background:#161616; color:white; padding:12px 18px; border-radius:12px; font-size:14px; z-index:2001; animation:slideDown 0.3s ease; border-left:5px solid #A2C617; box-shadow: 0 8px 20px rgba(0,0,0,0.4); max-width:250px; font-weight:500;";
+  toast.style = "position:fixed; bottom:180px; right:20px; background:#161616; color:white; padding:12px 18px; border-radius:12px; font-size:14px; z-index:2001; animation:slideDown 0.3s ease; border-left:5px solid #A2C617; box-shadow: 0 8px 20px rgba(0,0,0,0.4); max-width:250px; font-weight:500;";
   document.body.appendChild(toast);
   
   setTimeout(() => {
@@ -530,37 +633,46 @@ toast.style = "position:fixed; bottom:180px; right:20px; background:#161616; col
   }, 4000);
 }
 
-// Cambiar estado si el usuario escribe
-qInput.addEventListener('focus', () => { document.getElementById("clerkieMascota").src = CLERKIE_IMG.pensativo; });
-qInput.addEventListener('blur', () => { document.getElementById("clerkieMascota").src = CLERKIE_IMG.reposo; });
-qInicio.addEventListener('focus', () => { document.getElementById("clerkieMascota").src = CLERKIE_IMG.pensativo; });
-qInicio.addEventListener('blur', () => { document.getElementById("clerkieMascota").src = CLERKIE_IMG.reposo; });
+// --- INTERACCIÓN DINÁMICA DE CLERKIE ---
+qInput.addEventListener('input', (e) => {
+    const mascota = document.getElementById("clerkieMascota");
+    mascota.src = e.target.value.length > 0 ? CLERKIE_IMG.pensativo : CLERKIE_IMG.reposo;
+});
+
+qInicio.addEventListener('input', (e) => {
+    const mascota = document.getElementById("clerkieMascota");
+    mascota.src = e.target.value.length > 0 ? CLERKIE_IMG.pensativo : CLERKIE_IMG.reposo;
+});
+
+qInput.addEventListener('blur', () => {
+    if(qInput.value.length === 0) document.getElementById("clerkieMascota").src = CLERKIE_IMG.reposo;
+});
+qInicio.addEventListener('blur', () => {
+    if(qInicio.value.length === 0) document.getElementById("clerkieMascota").src = CLERKIE_IMG.reposo;
+});
 
 // ==========================================
-// NUEVA FUNCIÓN ÍNDICE SIN PESTAÑEO CON SPINNER GIRA-GIRA
+// FUNCIONES DE CARGA E INTERFAZ
 // ==========================================
 function verIndice() {
   const btn = document.getElementById("btnIndice");
   if (!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;
   btn.innerHTML = '<div class="spinner-indice"></div>';
   btn.style.pointerEvents = "none";
-  
-  // Clerkie entra en modo ESPERA
   document.getElementById("clerkieMascota").src = CLERKIE_IMG.espera;
-  
   ejecutarFetch("ver_todo_el_indice_global", "indice_button");
 }
 
-// ==========================================
-// LÓGICA DE PAÍSES
-// ==========================================
 function seleccionarPais(id, imgUrl) {
   paisSeleccionado = id;
   document.getElementById("countrySelect").value = id;
   document.getElementById("headerFlag").src = imgUrl;
   document.getElementById("listaDropdown").innerHTML = '<div style="padding:20px; text-align:center; color:#777; font-size: 13px !important;">Cargando avisos... ⏳</div>';
+  
+  // CORRECCIÓN: Mostrar interfaz principal y ocultar landing
   document.getElementById("pantallaPaises").classList.add("hidden");
   document.getElementById("interfazPrincipal").classList.remove("hidden");
+  
   volverInicio(true);
   cargarNotificaciones();
   cargarGuias();
@@ -579,9 +691,6 @@ function cambiarPaisDirecto(id) {
   cargarGuias();
 }
 
-// ==========================================
-// NAVEGACIÓN Y CEREBRO
-// ==========================================
 window.onload = function() {
   history.replaceState({ vista: 'paises' }, "");
 };
@@ -624,13 +733,8 @@ function abrirGuias(desdeHistorial) {
   if (desdeHistorial !== true) history.pushState({ vista: 'guias' }, "");
 }
 
-// ==========================================
-// LÓGICA DE BÚSQUEDA Y SPINNERS
-// ==========================================
 function activarLoader(origen = "header") { 
-  // Clerkie entra en modo ESPERA al iniciar cualquier carga
   document.getElementById("clerkieMascota").src = CLERKIE_IMG.espera;
-
   if (origen === "inicio") {
     const btnInicio = document.querySelector("#inicio .btn");
     if(btnInicio) btnInicio.classList.add("loading");
@@ -645,9 +749,7 @@ function activarLoader(origen = "header") {
 }
 
 function desactivarLoader(origen = "header") { 
-  // Clerkie vuelve a REPOSO al terminar la carga
   document.getElementById("clerkieMascota").src = CLERKIE_IMG.reposo;
-
   if (origen === "inicio") {
     const btnInicio = document.querySelector("#inicio .btn");
     if(btnInicio) btnInicio.classList.remove("loading");
@@ -701,8 +803,6 @@ function ejecutarFetch(palabra, origen) {
           document.getElementById("cajaIncidencias").style.display = "none";
           document.getElementById("guiasContainer").style.display = "none";
           document.getElementById("btnGuias").style.display = "flex";
-          
-          // Aseguramos que Clerkie vuelva a reposo tras cargar el índice
           document.getElementById("clerkieMascota").src = CLERKIE_IMG.reposo;
         }
         desactivarLoader(origen); 
@@ -765,9 +865,6 @@ function showDetail(item) {
   }
 }
 
-// ==========================================
-// MODALES E INTERFAZ
-// ==========================================
 function toggleRequisitos() {
   const cont = document.getElementById("detalleHContainer");
   cont.classList.toggle("activo");
@@ -783,19 +880,18 @@ function abrirModal() {
 function cerrarModal() { modal.style.display = "none"; }
 
 // ==========================================
-// GUÍAS FRECUENTES
+// GUÍAS Y NOTIFICACIONES
 // ==========================================
-let listaGuias = [];
 function cargarGuias() {
   fetch(`${webAppUrl}?action=guias&pais=${paisSeleccionado}`).then(res => res.json()).then(data => { 
     if(!data.error) {
-      listaGuias = data; 
-      renderizarGuias(); 
+      listaGuias = data; renderizarGuias(); 
     } else {
       document.getElementById("listaGuiasContenedor").innerHTML = `<div style="text-align:center; padding: 20px; color: #777;">Base de guías para ${paisSeleccionado} en construcción. 🏗️</div>`;
     }
   }).catch(e => console.log(e));
 }
+
 function renderizarGuias() {
   const contenedor = document.getElementById("listaGuiasContenedor");
   if (!listaGuias || listaGuias.length === 0) {
@@ -810,6 +906,7 @@ function renderizarGuias() {
   });
   contenedor.innerHTML = html;
 }
+
 function toggleAcordeon(index) {
   const item = document.getElementById(`guia-${index}`);
   const estaActivo = item.classList.contains('activo');
@@ -817,18 +914,15 @@ function toggleAcordeon(index) {
   if (!estaActivo) { item.classList.add('activo'); setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300); }
 }
 
-// ==========================================
-// NOTIFICACIONES
-// ==========================================
 let listaNotificaciones = [];
 function cargarNotificaciones() {
   fetch(`${webAppUrl}?action=notificaciones&pais=${paisSeleccionado}`).then(res => res.json()).then(data => { 
     if(!data.error) {
-      listaNotificaciones = data; 
-      renderizarNotificaciones(); 
+      listaNotificaciones = data; renderizarNotificaciones(); 
     }
   }).catch(e => console.log(e));
 }
+
 function renderizarNotificaciones() {
   const badge = document.getElementById("badgeNotif");
   const dropdown = document.getElementById("listaDropdown");
@@ -844,9 +938,8 @@ function renderizarNotificaciones() {
     const esIncidencia = notif.tipo === "incidencia"; 
     const icono = esIncidencia ? "🔴" : "💡";
     const fechaLimpia = formatearFechaSheet(notif.fecha);
-    const strFecha = fechaLimpia ? `<span style="font-size:12px; color:#7A8F6A;">${fechaLimpia}</span>` : '';
     const divItem = document.createElement("div"); divItem.className = "notif-item";
-    divItem.innerHTML = `<span class="notif-icono">${icono}</span> <div style="display:flex; flex-direction:column;"><span><b>${notif.titulo}</b></span> ${strFecha}</div>`;
+    divItem.innerHTML = `<span class="notif-icono">${icono}</span> <div style="display:flex; flex-direction:column;"><span><b>${notif.titulo}</b></span> <span style="font-size:12px; color:#7A8F6A;">${fechaLimpia}</span></div>`;
     divItem.onclick = () => abrirModalNotif(index); dropdown.appendChild(divItem);
      if (esIncidencia) {
       const fechaEsquina = fechaLimpia ? `<span class="incidencia-fecha-esquina">📅 ${fechaLimpia}</span>` : '';
@@ -860,15 +953,16 @@ function renderizarNotificaciones() {
   if (htmlIncidencias !== "") { cajaIncidencias.innerHTML = htmlIncidencias; if (document.getElementById("inicio").style.display !== "none") cajaIncidencias.style.display = "block"; } 
   else { cajaIncidencias.style.display = "none"; }
 }
+
 function toggleNotificaciones(e) { e.stopPropagation(); const drop = document.getElementById("dropdownNotif"); drop.style.display = drop.style.display === "block" ? "none" : "block"; }
 function abrirModalNotif(index) {
   const notif = listaNotificaciones[index];
   document.getElementById("modalTitulo").innerHTML = (notif.tipo === "incidencia" ? "🚨 " : "✨ ") + notif.titulo;
   const contFecha = document.getElementById("modalFecha");
   const fechaLimpia = formatearFechaSheet(notif.fecha);
-  if (fechaLimpia) { contFecha.innerHTML = `📅 ${fechaLimpia}`; contFecha.style.display = "block"; } else { contFecha.style.display = "none"; }
+  contFecha.innerHTML = fechaLimpia ? `📅 ${fechaLimpia}` : "";
   const imgEl = document.getElementById("modalImagen");
-  if (notif.imagen) { imgEl.src = notif.imagen; imgEl.style.display = "block"; } else { imgEl.style.display = "none"; imgEl.src = ""; }
+  if (notif.imagen) { imgEl.src = notif.imagen; imgEl.style.display = "block"; } else { imgEl.style.display = "none"; }
   document.getElementById("modalDetalle").innerText = notif.detalle;
   document.getElementById("modalNotif").style.display = "flex"; document.getElementById("dropdownNotif").style.display = "none";
 }
